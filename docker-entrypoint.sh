@@ -49,9 +49,16 @@ fi
 # Start SSH server daemon
 rc-service sshd start
 
-# Generate rsync configuration
-eval "echo \"$(cat /rsyncd.template.conf)\"" > /etc/rsyncd.conf
-rm /rsyncd.template.conf
+# Generate rsync configuration if it has not been provided by a volume mount
+EXIT_CODE=0
+md5sum -c -s /etc/rsyncd.conf.md5 || EXIT_CODE=$?
+if [ $EXIT_CODE == 0 ]; then
+    echo "Generating /etc/rsyncd.conf from template"
+    eval "echo \"$(cat /rsyncd.template.conf)\"" > /etc/rsyncd.conf
+    rm /rsyncd.template.conf
+else
+    echo "Ignoring /rsyncd.template.conf because /etc/rsyncd.conf was modified"
+fi
 
 # Check if a script is available in /docker-entrypoint.d and source it
 # You can use it for example to create additional sftp users
