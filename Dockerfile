@@ -1,11 +1,11 @@
-FROM alpine:3.22.1
+FROM alpine:3.22.2
 
 # Install dependencies
 # tzdata for time syncing
 # bash for entrypoint script
 # openrc to start SSH server daemon
 # Check https://pkgs.alpinelinux.org/packages for package versions
-RUN apk update && apk add --no-cache bash tzdata openssh rsync openrc \
+RUN apk update && apk add --no-cache bash tzdata openssh rsync=3.4.1-r1 openrc \
     # Generate hash for default rsync configuration, used in entrypoint script
     && md5sum /etc/rsyncd.conf > /etc/rsyncd.conf.md5 \
     # Setup and start SSH
