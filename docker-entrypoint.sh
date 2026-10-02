@@ -46,8 +46,9 @@ mkdir -p /root/.ssh
 if [ ! -z "$SSH_KEY" ]; then
     echo "$SSH_KEY" > /root/.ssh/authorized_keys
 fi
-# Start SSH server daemon
-rc-service sshd start
+# Generate missing host keys and start SSH server daemon
+ssh-keygen -A
+/usr/sbin/sshd
 
 # Generate rsync configuration if it has not been provided by a volume mount
 EXIT_CODE=0
